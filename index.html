@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Milky Way Tea House</title>
+   
+   <style>
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #ADD8E6;
+    margin: 0;
+    text-align: center;
+}
+
+.header {
+    overflow: hidden;
+    background-color: #f1f1f1;
+    padding: 30px;
+}
+
+.header a {
+    float: left;
+    text-align: center;                                                                                                                                          
+    color: black;
+    padding: 20px;
+    text-decoration: none;
+    font-size: 20px;
+    line-height: 20px;
+    border-radius: 4px;
+}
+
+.header a.logo {
+    font-size: 50px;
+    font-weight: bold;
+}
+
+.header a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.header a.active {
+    background-color: dodgerblue;
+    color: white;
+}
+
+.header-right {
+    float: right;
+}
+
+@media screen and (max-width: 500px) {
+    .header a {
+        float: none;
+        display: block;
+        text-align: left;
+    }
+
+    .header-right {
+        float: none;
+    }
+
+    .button {
+        display: none; /* Hide initially */
+    }
+}
+
+.button a {
+    background-color: #ffffff; /* White background */
+    border: none;
+    border-radius: 25px;
+    color: black;
+    display: inline-block;
+    padding: 20px 50px; /* Adjust padding as needed */
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px; /* Adjust the spacing */
+    margin-left: 45px;
+    margin-right: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow effect */
+    transition: box-shadow 0.3s ease; /* Smooth transition for shadow */
+}
+
+.button a:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Increase shadow on hover */
+}
+
+.container {
+    display: none; /* Hide initially */
+    text-align: left;
+    margin: 55px;
+}
+
+.active-section {
+    display: block; /* Show active section */
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 150px; /* Adjust this value to move the form up or down */
+    margin-left: 50px; /* Add this line to move the form to the right */
+    flex-direction: column; /* Align items vertically */
+}
+
+.login-form {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+}
+
+.login-form select, .login-form input[type="text"] {
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+}
+
+.flavors {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    justify-items: center;
+    margin-top: 70px;
+}
+
+.flavor {
+    background-color: #FFFFFF;
+    padding: 10px; /* Adjust padding to fit content */
+    border: 4px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 150px;
+    height: 200px; /* Increase height to fit image and text */
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add box shadow */
+    transition: box-shadow 0.3s ease; /* Smooth transition for shadow */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.flavor img {
+    max-width: 100%; /* Ensure the image does not exceed the width of the container */
+    max-height: 70%; /* Ensure the image does not exceed the height of the container */
+    object-fit: cover; /* Cover the area while maintaining aspect ratio */
+}
+
+.flavor span {
+    font-size: 16px; /* Adjust font size as needed */
+    font-weight: bold; /* Make the text bold */
+    text-align: center; /* Center the text */
+    margin-top: 10px; /* Adjust the spacing above the text */
+}
+
+.flavor:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Increase shadow on hover */
+}
+
+.fixed-cart {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    width: 350px; /* Adjust the width as needed */
+    height: auto; /* Auto height to fit content */
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 5px;
+    z-index: 1000; /* Ensure it stays on top */
+}
+
+.fixed-cart h2 {
+    font-size: 16px; /* Adjust font size for the cart title */
+}
+
+.fixed-cart .cart-items {
+    font-size: 16px; /* Adjust font size for cart items */
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    max-height: 150px; /* Ensure cart items don't overflow the container */
+    overflow-y: auto; /* Add a scrollbar if necessary */
+}
+
+.fixed-cart .cart-item {
+    font-size: 14px; /* Adjust font size for individual cart items */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.fixed-cart .cart-item .quantity-controls {
+    display: flex;
+    align-items: center;
+    font-size: 14px; /* Adjust font size for quantity controls */
+}
+
+.fixed-cart .cart-item .quantity-controls button {
+    background-color: #FFFFFF; /* White background color for buttons */
+    border: 1px solid #ddd;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    margin: 0 5px; /* Adjust this value to change spacing */
+}
+
+.fixed-cart .cart-item .quantity-controls button:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.fixed-cart .cart-item .quantity-controls .quantity {
+    width: 30px; /* Width for the quantity display */
+    text-align: center;
+    margin: 0 5px; /* Adjust this value to change spacing */
+}
+
+.remove {
+    background-color: #FFFFFF; /* White background color for buttons */
+    border: 1px solid #ddd;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    margin-right: 10px;
+}
+
+.remove:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.fixed-cart .cart-item .quantity {
+    font-size: 14px; /* Adjust font size for quantity input */
+    width: 50px;
+    text-align: center;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.fixed-cart .cart-item .price {
+    font-size: 14px; /* Adjust font size for price */
+}
+
+.fixed-cart .total {
+    font-size: 18px; /* Adjust font size for the total amount */
+    font-weight: bold;
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+.fixed-cart .buttons-container .proceed-payment {
+    font-size: 16px; /* Adjust font size for the proceed payment button */
+    background-color: #FFFFFF; /* White background color for buttons */
+    border: 1px solid #ddd;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.fixed-cart .buttons-container .proceed-payment:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.fixed-cart .buttons-container .remove-all {
+    font-size: 16px; /* Adjust font size for the remove all button */
+    background-color: #FF6347; /* Red background color for remove all button */
+    color: white; /* White text color for remove all button */
+    border: 1px solid #ddd;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    margin-bottom: 10px;
+}
+
+.fixed-cart .buttons-container .remove-all:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Adjust font size for text inside home section */
+#home-section h1 {
+    font-size: 24px; /* Adjust as needed */
+}
+
+#home-section p {
+    font-size: 16px; /* Adjust as needed */
+}
+
+/* Adjust font size for text inside contact section */
+#contact-section h1 {
+    font-size: 24px; /* Adjust as needed */
+}
+
+#contact-section p {
+    font-size: 16px; /* Adjust as needed */
+}
+
+/* Adjust font size for text inside about section */
+#about-section h1 {
+    font-size: 24px; /* Adjust as needed */
+}
+
+#about-section p {
+    font-size: 16px; /* Adjust as needed */
+}
+   </style>
+</head>
+<body>
+
+<div class="header">
+   <a href="#" class="logo">MILKY WAY MILKTEA</a>
+   <div class="header-right">
+      <a class="active" href="#home">Home</a>
+      <a href="#contact" class="contact">Contact Us</a>
+      <a href="#about" class="about">About Us</a>
+   </div>
+</div>
+
+<div class="container active-section" id="home-section">
+   <div class="login-container">
+      <div class="login-form">
+         <select>
+            <option value="us">USA +1</option>
+            <option value="uk">UK +44</option>
+            <option value="ca">Canada +1</option>
+            <option value="au">Australia +61</option>
+			<option value="ph">Philippines +63</option>
+            <!-- Add more options as needed -->
+         </select>
+         <input type="text" placeholder="Enter your phone number" id="phone-number">
+      </div>
+      <div class="error-message" id="error-message" style="display: none;">Please enter your number first.</div>
+   </div>
+</div>
+
+<div class="button">
+   <div class="button">
+      <a href="#proceed" class="proceed">Proceed</a>
+   </div>
+</div>
+
+<div class="container" id="contact-section">
+   <h1>Contact Us</h1>
+   <p> Email: adyday123@gmail.com</p>
+   <p> Facebook: Milktea Milktea </p>
+   <p> Instagram: Milk.Tea_ </p>
+   <!-- Add content for the contact us section here -->
+</div>
+
+<div class="container" id="about-section">
+   <h1>About Us</h1>
+   <p>
+      At Milky Way Tea House, we are passionate about crafting the perfect cup of milk tea that takes you on a journey through the cosmos of flavors. Established in 2010 by Lady, who shared a deep love for milk tea and a dream of bringing a taste of the stars to their community.
+   </p>
+    <p>
+      Our journey began in a small corner shop tucked away in the bustling streets of downtown. With dedication and a commitment to quality, we experimented tirelessly with different tea blends, sourced the finest ingredients, and perfected our signature recipes.
+    </p>
+    <p>
+      As word spread of our out-of-this-world beverages, our humble shop quickly became a beloved destination for milk tea enthusiasts seeking an escape from the ordinary. From classic flavors like Jasmine and Earl Grey to innovative creations like Milky Classic Tea and choices from her companions, each sip is a celestial experience that transports you to far-off galaxies.
+    </p>
+    <p>
+      Over the years, Milky Way Tea House has grown beyond our wildest dreams. Today, we proudly serve our cosmic concoctions in multiple locations across the galaxy, but our mission remains the same: to inspire wonder and delight with every cup.
+    </p>
+   <p>
+      Join us on this cosmic voyage as we continue to explore new horizons, push the boundaries of flavor, and share the magic of milk tea with the universe!
+   </p>
+</div>
+
+<div class="container" id="proceed-section">
+   <h1>Milktea Flavors:</h1>
+   <div class="flavors">
+      <div class="flavor" data-name="Classic Milktea" data-price="140">
+         <img src="mite1.jpg" alt="Classic Milktea">
+         <span>Classic Milktea</span>
+      </div>
+      <div class="flavor" data-name="Choco Milktea" data-price="150">
+         <img src="mite2.jpg" alt="Choco Milktea">
+         <span>Choco Milktea</span>
+      </div>
+      <div class="flavor" data-name="Strawberry Milktea" data-price="150">
+         <img src="mite3.jpg" alt="Strawberry Milktea">
+         <span>Strawberry Milktea</span>
+      </div>
+      <div class="flavor" data-name="Oreo Milktea" data-price="170">
+         <img src="mite4.jpg" alt="Oreo Milktea">
+         <span>Oreo Milktea</span>
+      </div>
+      <div class="flavor" data-name="Kirsten's Choice" data-price="190">
+         <img src="mite5.png" alt="Kirsten's Choice">
+         <span>Kirsten's Choice (Wintermelon)</span>
+      </div>
+      <div class="flavor" data-name="Sir Adong's Choice" data-price="190">
+         <img src="mite6.png" alt="Sir Adong's Choice">
+         <span>Sir Adong's Choice (Earl Grey)</span>
+      </div>
+      <div class="flavor" data-name="Sir Ralph's Basic Drink" data-price="190">
+         <img src="mite7.png" alt="Sir Ralph's Basic Drink">
+         <span>Sir Ralph's Basic Drink (Java Chip)</span>
+      </div>
+   </div>
+   <div class="cart fixed-cart">
+      <h2>Cart</h2>
+       <div class="cart-items"></div>
+         <div class="total">Total: ₱0.00</div>
+      <div class="buttons-container">
+         <button class="remove-all">Remove All</button>
+          <button class="proceed-payment">Proceed to Payment</button>
+      </div>
+   </div>
+</div>
+
+<script>
+   document.addEventListener("DOMContentLoaded", function() {
+      const homeButton = document.querySelector('.header a[href="#home"]');
+      const contactButton = document.querySelector('.header a[href="#contact"]');
+      const aboutButton = document.querySelector('.header a[href="#about"]');
+      const proceedButton = document.querySelector('.proceed');
+      const homeSection = document.getElementById('home-section');
+      const contactSection = document.getElementById('contact-section');
+      const aboutSection = document.getElementById('about-section');
+      const proceedSection = document.getElementById('proceed-section');
+      const flavors = document.querySelectorAll(".flavor");
+      const cartItems = document.querySelector(".cart-items");
+      const totalDisplay = document.querySelector(".total");
+      const removeAllButton = document.querySelector(".remove-all");
+      const phoneNumberInput = document.getElementById("phone-number");
+      const errorMessage = document.getElementById("error-message");
+      let totalCost = 0;
+
+      proceedButton.addEventListener('click', function(event) {
+         event.preventDefault();
+         if (phoneNumberInput.value === "") {
+            errorMessage.style.display = "block";
+         } else {
+            homeSection.classList.remove('active-section');
+            contactSection.classList.remove('active-section');
+            aboutSection.classList.remove('active-section');
+            proceedSection.classList.add('active-section');
+            proceedButton.parentElement.style.display = "none"; // Hide the proceed button
+            errorMessage.style.display = "none"; // Hide the error message if phone number is entered
+         }
+      });
+
+      flavors.forEach(flavor => {
+         flavor.addEventListener("click", function() {
+            const name = this.dataset.name;
+            const price = parseInt(this.dataset.price);
+            let quantity = 1;
+            totalCost += price * quantity;
+
+            const item = document.createElement("div");
+            item.classList.add("cart-item");
+            item.innerHTML = `
+               <button class="remove">Remove</button>
+               <span>${name}</span>
+               <div class="quantity-controls">
+                  <button class="decrease">-</button>
+                  <span class="quantity">${quantity}</span>
+                  <button class="increase">+</button>
+               </div>
+               <span class="price">₱${(price * quantity).toFixed(2)}</span>
+            `;
+
+            cartItems.appendChild(item);
+            totalDisplay.textContent = `Total: ₱${totalCost.toFixed(2)}`;
+
+            // Disable the clicked flavor button
+            flavor.style.pointerEvents = 'none';
+            flavor.style.opacity = '0.6';
+
+            const removeButton = item.querySelector(".remove");
+            const decreaseButton = item.querySelector(".decrease");
+            const increaseButton = item.querySelector(".increase");
+            const quantityDisplay = item.querySelector(".quantity");
+            const priceDisplay = item.querySelector(".price");
+
+            removeButton.addEventListener("click", function() {
+               totalCost -= price * quantity;
+               totalDisplay.textContent = `Total: ₱${totalCost.toFixed(2)}`;
+               item.remove();
+               // Re-enable the flavor button when removed from the cart
+               flavor.style.pointerEvents = 'auto';
+               flavor.style.opacity = '1';
+            });
+
+            decreaseButton.addEventListener("click", function() {
+               if (quantity > 1) {
+                  quantity--;
+                  totalCost -= price;
+                  quantityDisplay.textContent = quantity;
+                  priceDisplay.textContent = `₱${(price * quantity).toFixed(2)}`;
+                  totalDisplay.textContent = `Total: ₱${totalCost.toFixed(2)}`;
+               }
+            });
+
+            increaseButton.addEventListener("click", function() {
+               quantity++;
+               totalCost += price;
+               quantityDisplay.textContent = quantity;
+               priceDisplay.textContent = `₱${(price * quantity).toFixed(2)}`;
+               totalDisplay.textContent = `Total: ₱${totalCost.toFixed(2)}`;
+            });
+         });
+      });
+
+      removeAllButton.addEventListener("click", function() {
+         cartItems.innerHTML = "";
+         totalCost = 0;
+         totalDisplay.textContent = `Total: ₱${totalCost.toFixed(2)}`;
+         // Re-enable all flavor buttons
+         flavors.forEach(flavor => {
+            flavor.style.pointerEvents = 'auto';
+            flavor.style.opacity = '1';
+         });
+      });
+
+      const proceedPaymentButton = document.querySelector(".proceed-payment");
+      proceedPaymentButton.addEventListener("click", function() {
+         if (cartItems.children.length === 0) {
+            alert("Please order first.");
+         } else {
+            alert(`Proceed to payment. Total: ₱${totalCost.toFixed(2)}`);
+         }
+      });
+
+      function hideProceedButton() {
+         proceedButton.parentElement.style.display = "none"; // Hide the proceed button
+      }
+
+      homeButton.addEventListener('click', function(event) {
+         event.preventDefault();
+         homeSection.classList.add('active-section');
+         contactSection.classList.remove('active-section');
+         aboutSection.classList.remove('active-section');
+         proceedSection.classList.remove('active-section');
+         proceedButton.parentElement.style.display = "block"; // Show the proceed button again
+         errorMessage.style.display = "none"; // Hide the error message
+      });
+
+      contactButton.addEventListener('click', function(event) {
+         event.preventDefault();
+         homeSection.classList.remove('active-section');
+         contactSection.classList.add('active-section');
+         aboutSection.classList.remove('active-section');
+         proceedSection.classList.remove('active-section');
+         hideProceedButton(); // Hide the proceed button
+         errorMessage.style.display = "none"; // Hide the error message
+      });
+
+      aboutButton.addEventListener('click', function(event) {
+         event.preventDefault();
+         homeSection.classList.remove('active-section');
+         contactSection.classList.remove('active-section');
+         aboutSection.classList.add('active-section');
+         proceedSection.classList.remove('active-section');
+         hideProceedButton(); // Hide the proceed button
+         errorMessage.style.display = "none"; // Hide the error message
+      });
+   });
+</script>
+
+</body>
+</html>
